@@ -51,7 +51,7 @@ class Library:
     
     def find_book_by_title(self, title):
         """根据书名查找图书"""
-        for book in self.books:
+        for book in self.books.values():
             if book.title == title:
                 return book
         return None
@@ -66,7 +66,7 @@ class Library:
         keyword_lower = keyword.lower()
         matched_books = []
         
-        for book in self.books:
+        for book in self.books.values():
             if keyword_lower in book.title.lower():
                 matched_books.append(book)
 
@@ -82,7 +82,7 @@ class Library:
         author_keyword_lower = author_keyword.lower()
         matched_books = []
 
-        for book in self.books:
+        for book in self.books.values():
             if author_keyword_lower in book.author.lower():
                 matched_books.append(book)
 
@@ -107,6 +107,51 @@ class Library:
         else:
             print(f"无效的搜索类型:{search_type}")
             return []
+        
+
+    def recommend_books_by_author(self, borrowed_book_title):
+        """根据已借阅的图书推荐同作者的其他图书"""
+        borrowed_book = self.find_book_by_title(borrowed_book_title)
+        if not borrowed_book:
+            print(f"未找到已借阅的图书:{borrowed_book_title}")
+            return []
+        recommended_books = []
+        for book in self.books.values():
+            if (book.author == borrowed_book.author and 
+                book.title != borrowed_book.title and
+                not book.is_borrowed):
+                recommended_books.append(book)
+        return recommended_books
+    
+    def recommend_books_by_genre(self):
+        """基于简单规则的图书推荐（按类型）"""
+        recommendations={
+            "编程类": [],
+            "算法类": [],
+            "其他类": []
+        }
+        for book in self.books.values():
+            if book.is_available():
+                title_lower = book.title.lower()
+                if "python" in title_lower or "编程" in title_lower or "开发" in title_lower:
+                    recommendations["编程类"].append(book)
+                elif "算法" in title_lower or "数据结构" in title_lower:
+                    recommendations["算法类"].append(book)
+                else:
+                    recommendations["其他类"].append(book)
+        return recommendations
+    
+    def display_recommendations(self, books, recommendation_type="通用"):
+        """显示推荐结果"""
+        if not books:
+            print(f"暂无{recommendation_type}推荐")
+            return
+        print(f"\n📚 {recommendation_type}推荐（共{len(books)}本）：")
+        print("-" * 50)
+        for i,book in enumerate(books, 1):
+            print(f"{i}. {book}")
+        print("-" * 50)
+
     
     def register_member(self, member_name):
         """注册会员"""

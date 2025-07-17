@@ -145,13 +145,32 @@ def demo():
     # 显示某个会员的借阅情况
     library.display_member_books("张三")
 
+    print("\n"+"="*60)
+    print("🎯 智能推荐系统演示")
+    # 演示1：基于作者的推荐
+    print("\n📖 演示1：基于作者推荐")
+    print("假设用户借阅了《Python编程：从入门到实践》...")
+    author_recommendations = library.recommend_books_by_author("Python编程：从入门到实践")
+    library.display_recommendations(author_recommendations, "同作者")
+
+    # 演示2：基于类型的推荐
+    print("\n🏷️ 演示2：基于类型推荐")
+    genre_recommendations = library.recommend_books_by_genre()
+    for genre, books in genre_recommendations.items():
+        if books:
+            library.display_recommendations(books, genre)
+
+    print("\n" + "="*60)
+    print("✨ 感谢使用智能图书管理系统！")
+    print("="*60)
+
 
 if __name__ == "__main__":
     # 询问运行模式
     print("请选择运行模式：")
     print("1. 完整管理系统")
     print("2. 快速演示")
-    
+
     mode = input("请选择 (1/2): ").strip()
     
     if mode == "2":
