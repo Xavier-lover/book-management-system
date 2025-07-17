@@ -49,6 +49,65 @@ class Library:
         
         return True
     
+    def find_book_by_title(self, title):
+        """根据书名查找图书"""
+        for book in self.books:
+            if book.title == title:
+                return book
+        return None
+    
+    # 🌟 新增功能：按书名搜索（模糊匹配）
+    def search_books_by_title(self, keyword):
+        """ 根据关键词搜索图书标题（支持模糊匹配）"""
+        if not keyword:
+            print("请输入搜索关键词！")
+            return []
+        
+        keyword_lower = keyword.lower()
+        matched_books = []
+        
+        for book in self.books:
+            if keyword_lower in book.title.lower():
+                matched_books.append(book)
+
+        return matched_books
+    
+     # 🌟 新增功能：按作者搜索
+    def search_book_by_author(self, author_keyword):
+        """ 根据作者关键词搜索图书作者（支持模糊匹配）"""
+        if not author_keyword:
+            print("请输入作者关键词")
+            return []
+        
+        author_keyword_lower = author_keyword.lower()
+        matched_books = []
+
+        for book in self.books:
+            if author_keyword_lower in book.author.lower():
+                matched_books.append(book)
+
+        return matched_books
+    
+    # 🌟 新增功能：综合搜索
+    def search_books(self, keyword, search_type="all"):
+        """ 综合搜索功能：可以按标题、作者或全部进行搜索"""
+        if not keyword:
+            print("请输入关键词")
+            return []
+        
+        if search_type == "title":
+            return self.search_books_by_title(keyword)
+        elif search_type == "author":
+            return self.search_books_by_author(keyword)
+        elif search_type == "all":
+            title_results=self.search_books_by_title(keyword)
+            author_results=self.search_books_by_author(keyword)
+            all_results=list(set(title_results+author_results))
+            return all_results
+        else:
+            print(f"无效的搜索类型:{search_type}")
+            return []
+    
     def register_member(self, member_name):
         """注册会员"""
         member_name = member_name.strip()
